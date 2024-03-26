@@ -23,15 +23,14 @@ provider "azuread" {
 }
 
 provider "github" {
-  owner = "YourGithubOrganization" # Insert your own org name here
+  owner = "Microsoft" 
   app_auth { }
 }
 
-# I use "abcd" as my "company name" here as an example, substitute for anything you want.
 # Combining this name_prefix with resource type in names later on enforces good naming practices for the Azure resources.
 
 locals {
-  name_prefix = "abcd${var.environment}${var.service_name}"
+  name_prefix = "backstage-poc-${var.environment}${var.service_name}"
   app_service_ip_address = distinct(split(",", azurerm_app_service.backstage_app.outbound_ip_addresses))
 }
 
@@ -139,7 +138,7 @@ resource "azurerm_app_service_plan" "backstage_app_plan" {
 }
 
 resource "azurerm_app_service" "backstage_app" {
-  name                = "${local.name_prefix}app"
+  name                = "${local.name_prefix}appservice"
   location            = azurerm_resource_group.backstage_rg.location
   resource_group_name = azurerm_resource_group.backstage_rg.name
   app_service_plan_id = azurerm_app_service_plan.backstage_app_plan.id
@@ -220,7 +219,7 @@ resource "github_actions_organization_secret" "github_azure_client_secret" {
 }
 
 resource "github_actions_secret" "azure_credentials" {
-  repository       = "your-repository-name"
+  repository       = "backstage-poc"
   secret_name      = "AZURE_CREDENTIALS"
   plaintext_value  = jsonencode({
     "clientId" = azuread_service_principal.service_principal.application_id

@@ -1,11 +1,13 @@
 # Environment, for example "prod" or "test"
 variable "environment" {
     type = string
+    default = "test"
 }
 
 # The name of your new service, for example "backstage"
 variable "service_name" { 
     type = string
+    default = "backstage-poc"
 }
 
 # Change this to match whatever suits you best
@@ -17,6 +19,7 @@ variable "location" {
 # An admin password for your database
 variable "db_admin_password" {
     type = string
+    default = "AAbb##123"
 }
 
 variable "db_admin_username" {
